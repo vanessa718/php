@@ -12,8 +12,18 @@
 */
 $num = $_GET['num'];
 if(!isset($num)) {
-	die("Vous devez appeler le script de cette facon : <br /><br /><strong>http://localhost/formation/PHP/exercices/conditions/exercice5.php?num=4</strong>");
+	die("Vous devez appeler le script de cette facon : <br /><br /><strong>http://localhost:8888/exercice5.php?num=4</strong>");
 }
 /*
 * Completez le code ici
 */
+$i=($num%2);
+switch ($i) {
+    case 0:
+        echo "Le numéro est pair";
+        break;
+    case 1:
+        echo "Le numéro est impair";
+        break;
+}
+?>
