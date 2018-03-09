@@ -26,10 +26,8 @@
 			echo "Bonjour votre nom est :".$_SESSION['name'] ." et votre prénom est : " .$_SESSION['first-name'] ;
 
 	session_unset();		           
-			}
-		
+			}		
 		 }
-
 	/**
 	* Creer un formulaire qui demande le nom de l'utilisateur
 	* une fois envoyé
@@ -39,6 +37,5 @@
 	* Indice : il faut utiliser les sessions
 	*/
 	?>
-
 </body>
 </html>

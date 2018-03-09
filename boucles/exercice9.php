@@ -1,6 +1,5 @@
 <?PHP
-$img=imagecreate(200,100);
-echo $img;
+
 /**
 * Creer un script permettant de creer plusieurs rectangles de tailles differentes
 * et placer y des ronds a l'interieur de couleur differentes.
