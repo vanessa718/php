@@ -15,11 +15,12 @@
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-class Actor
+class Person
 {
-    private $_firstName;
-    private $_lastName;
-    private $extraData = array();
+    protected $_firstName;
+    protected $_lastName;
+    protected $extraData = array();
+
     public function __set($name, $val)
     {
         $this->extraData[$name] = $val;
@@ -37,16 +38,27 @@ class Actor
         $this->_firstName = $_firstName;
         $this->_lastName = $_lastName;
     }
+}
+class Actor extends Person
+{   
+    private $_oscars;
+   
+    public function __construct($firstName, $lastName, $oscars)
+    {
+         $this->_oscars=$oscars;
+         parent::__construct($firstName, $lastName);
+    }   
     public function fullName()
     {
         if (isset($this->extraData['birthDate'])) $birthDate = " " . $this->extraData['birthDate'];
         else $birthDate = "";
-        echo "<p>".$this->_firstName." ".$this->_lastName."$birthDate</p>";
+        echo "<p>{$this->_firstName} {$this->_lastName} {$birthDate} a eu {$this->_oscars} oscars</p>";
     }
 }
-$actors[] = new Actor('John', 'Gielgud');
-$actors[] = new Actor('Laurence', 'Olivier');
-$actors[] = new Actor('Vivien', 'Leigh');
+$actors=[];
+$actors[] = new Actor('John', 'Gielgud',2);
+$actors[] = new Actor('Laurence', 'Olivier', 3);
+$actors[] = new Actor('Vivien', 'Leigh', 1);
 $actors[0]->birthDate = '14/04/1904';
 echo "<h1>Actors List</h1>";
 foreach ($actors as $actor) {
