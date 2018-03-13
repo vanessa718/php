@@ -20,10 +20,22 @@ class Actor
     private $_firstName;
     private $_lastName;
     private $extraData = array();
+
+    
+    public function __get($name)
+    {
+        if (isset($this->extraData[$name]))
+        {
+          return $this->extraData[$name];
+        } else {
+            trigger_error("Error: tried to access undefined property: $name");
+        }
+    }
     public function __set($name, $val)
     {
-        $this->extraData[$name] = $val;
+        $this->extraData[$name] = $val;   
     }
+
     public function __construct($_firstName, $_lastName)
     {
         $this->_firstName = $_firstName;
@@ -31,16 +43,41 @@ class Actor
     }
     public function fullName()
     {
-        echo "<p>".$this->_firstName." ".$this->_lastName."</p>";
+        if (isset($this->extraData['birthDate'])) $birthDate = " " . $this->extraData['birthDate'];
+        else $birthDate = "";
+        echo "<p>".$this->_firstName." ".$this->_lastName."$birthDate"."</p>";
     }
 }
+
 $actors[] = new Actor('John', 'Gielgud');
 $actors[] = new Actor('Laurence', 'Olivier');
 $actors[] = new Actor('Vivien', 'Leigh');
+$actors[0]->birthDate=" est né le 14 avril 1904";
+
 echo "<h1>Actors List</h1>";
 foreach ($actors as $actor) {
     $actor->fullName();
 }
-// vim: set expandtab:
-// vim: set tabstop=4 shiftwidth=4 softtabstop=4:
 ?>
+
+<!-- <?php
+// class MaClasse
+// {
+//   private $attributs = [];
+//   private $unAttributPrive;
+  
+  
+//   public function afficherAttributs()
+//   {
+//     echo '<pre>', print_r($this->attributs, true), '</pre>';
+//   }
+// }
+
+// $obj = new MaClasse;
+
+// $obj->attribut = 'Simple test';
+// $obj->unAttributPrive = 'Autre simple test';
+
+// echo $obj->attribut;
+// echo $obj->autreAtribut;
+?> -->
