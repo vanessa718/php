@@ -1,52 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-	<meta charset="utf-8">
-	<title>exercice 2</title>
-</head>
-<body>
-	<form name="form1" method="POST" action="">
-		<label for="nom">Nom du produit *</label>
-		<input type="text" name="nom" id="nom" value="" required>
-		<br>
-		<label for="date">Date</label>
-		<input type="text" name="date_com" id="date" value="" required>
-		<br>
-		<label for="acheteur">Acheteur *</label>
-		<input type="text" name="acheteur" id="acheteur" value="" required>
-		<br>
-		<label for="etat">Etat *</label>
-		<input type="text" name="etat" id="etat" value="" required>
-		<br>
-		<!-- Champ masqué qui va récupérer l'auto-increment de l'identifiant unique du produit -->
-		<input type="hidden" name="id" value="">
-		<input type="submit" name="button" value="Ajouter">
-	</form>
-<?php
-if(!empty($_POST)){
-	//connexion MySQL
-	$user = 'root';
-	$password = 'simplonco';
-
-	try{
-		$connect = new PDO('mysql:dbname=mydb; host=localhost',$user,$password);
-		$nom= $_POST['nom'];
-		$date_com= $_POST['date_com'];
-		$acheteur= $_POST['acheteur'];
-		$etat= $_POST['etat'];
-
-
-		$add = $connect->prepare("SELECT 'Produits,idClients, Date, Etat' FROM Commandes ");
-
-		$produit = $add->execute();
-	}catch(PDOException $e){
-		echo 'Une erreur est survenue, merci de contacter le service'.$e;
-	}
-}
-
-
-	
-		 
+ <?php 
 /**
  * @file    exercice02.php
  * @author	Hans Vanpee <hans@vanpee.fr>
@@ -60,3 +12,60 @@ if(!empty($_POST)){
  */
 // vim: set expandtab:
 // vim: set tabstop=4 shiftwidth=4 softtabstop=4:
+
+	//connexion MySQL
+	$user = 'root';
+	$password = 'simplonco';
+
+try{
+	$connect = new PDO('mysql:dbname=mydb;host=localhost;charset=utf8mb4',$user,$password);
+	}catch(PDOException $e){
+		die ('<p>Erreur SQL !</p>');
+}
+if(count($_POST)>0){
+	enregistrer();
+}else{
+	formulaire();
+}
+
+function enregistrer()
+{
+	global $connect;//pour rappeler la variable dans cette méthode
+	try{
+		$result=$connect->prepare('INSERT INTO Commandes (`Date`, `idClients`) values (:date, :idClients)');
+		if($result->execute($_POST)){
+			echo "<p>Nouvelle commande enregistrée</p>";
+		}else{
+			echo "<p>La commande n'est pas enregistrée : {$connect->errorCode()}</p>";
+		}
+	}catch(PDOException $e){
+		echo "<p>Erreur de la base de données : {$e->getMessage()}</p>";
+	}catch(Exception $e){
+		echo "<p>Erreur : {$e->getMessage()}</p>";
+	}
+}
+function formulaire()
+{
+	global $connect;
+	echo "<h3> Nouvelle commande </h3>";
+
+	$form = <<<TEST
+		<form action="" method="POST">
+			<fieldset>
+				<label>Date</label>
+				<input type="text" name="date"><br>
+				<label>Client</label>
+				<select name="idClients">
+TEST;
+	$query = $connect->query("SELECT * FROM Clients");
+	foreach ($query->fetchAll(PDO::FETCH_ASSOC) as $row) {
+		$form .= "<option value=\"{$row['idClients']}\">{$row['Nom']}</option>";
+	}
+		$form .= <<<TEST
+				</select>
+			</fieldset>
+			<input type="submit" value="Enregistrer">
+		</form>
+TEST;
+	echo $form;
+}
